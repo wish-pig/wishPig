@@ -1,17 +1,14 @@
 #!/bin/bash 
 
-currentBranch=`git symbolic-ref --short -q HEAD`
+mergerBranch="buildTest"
 
+currentBranch=`git symbolic-ref --short -q HEAD`
+echo "当前分支"
 echo ${currentBranch}
 
-`git checkout branch2 && git pull origin branch2 && git pull origin branch1 && git push origin branch2`
-
-echo "完成"
-
-# `git che`
 function parseGitDirty(){
     local git_status=$(git status 2> /dev/null | tail -n1) || $(git status 2> /dev/null | head -n 2 | tail -n1);
-    echo ${git_status}
+    # echo ${git_status}
     if [[ "$git_status" != "" ]]; then
         local git_now; # 标示
         if [[ "$git_status" =~ nothing\ to\ commit || "$git_status" =~  Your\ branch\ is\ up\-to\-date\ with ]]; then
@@ -30,6 +27,18 @@ function parseGitDirty(){
         echo "${git_now}";
     fi
 }
+# currentStatus=$(parseGitDirty)
+# if [ "$currentStatus" = "~" ] 
+# then
+#     echo "hellow"
+# fi
+# echo $(parseGitDirty)
 
+git checkout ${mergerBranch}
+git pull origin ${mergerBranch} 
+git pull origin ${currentBranch}
+git push origin ${mergerBranch}
+git checkout ${currentBranch}
 
+echo "完成"
 
